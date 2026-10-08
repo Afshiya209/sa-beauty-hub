@@ -9,7 +9,7 @@ import { Loading } from '../components/ui';
 const STEPS = ['pending', 'confirmed', 'processing', 'shipped', 'out_for_delivery', 'delivered'];
 const label = (s: string) => s.replace(/_/g, ' ');
 
-function AuthForm() {
+export function AuthForm() {
   const [mode, setMode] = useState<'login' | 'register'>('login'); const [busy, setBusy] = useState(false);
   const [f, setF] = useState({ name: '', phone: '', email: '', password: '' });
   const set = (k: string) => (e: any) => setF({ ...f, [k]: e.target.value });

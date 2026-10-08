@@ -1,18 +1,25 @@
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { supabase } from '../lib/supabase';
 import { useCart, money } from '../lib/cart';
 import { getSettings } from '../lib/data';
-import { Empty, useAsync } from '../components/ui';
+import { useAuth } from '../lib/auth';
+import { AuthForm } from './Account';
+import { Empty, Loading, useAsync } from '../components/ui';
 
 export default function Checkout() {
   const { lines, subtotal, clear } = useCart(); const nav = useNavigate();
   const s = useAsync(getSettings, []); const fee = Number(s.data?.delivery_charge ?? 0);
   const [busy, setBusy] = useState(false); const key = useRef(crypto.randomUUID());
   const [f, setF] = useState({ name: '', phone: '', email: '', address: '', city: '', state: '', pincode: '' });
+  const { user, loading } = useAuth();
+  useEffect(() => { if (!user) return; supabase.from('profiles').select('full_name,phone,email').eq('id', user.id).single().then(({ data }) => {
+    if (data) setF(x => ({ ...x, name: x.name || data.full_name || '', phone: x.phone || data.phone || '', email: x.email || data.email || '' })); }); }, [user]);
   const set = (k: string) => (e: any) => setF({ ...f, [k]: e.target.value });
   if (!lines.length) return <div className="wrap"><Empty msg="Your cart is empty." /><div className="text-center"><Link to="/shop" className="btn">Shop</Link></div></div>;
+  if (loading) return <Loading />;
+  if (!user) return <div><p className="text-center text-muted pt-10 px-4">Please log in or create an account to place your order. Your cart will be saved.</p><AuthForm /></div>;
   const submit = async (e: FormEvent) => {
     e.preventDefault(); if (busy) return;
     if (!/^[6-9]\d{9}$/.test(f.phone.replace(/\D/g, '').slice(-10))) return toast.error('Enter a valid 10-digit mobile number');
