@@ -34,6 +34,8 @@ function Dashboard() {
   return <div className="grid grid-cols-2 md:grid-cols-4 gap-3">{cards.map(([t, v]) => <div key={t as string} className="border border-gold/30 p-5"><p className="text-xs text-muted tracking-widest">{t}</p><p className="text-2xl text-gold mt-2 font-serif">{v}</p></div>)}</div>;
 }
 
+const L = ({ t, children }: any) => <label className="block text-xs tracking-widest">{t}{children}</label>;
+
 function ProductForm({ p, cats, onClose, onSaved }: any) {
   const [f, setF] = useState<any>({ name: '', slug: '', description: '', category_id: '', price: '', original_price: '', stock: 0, sku: '', images: [], featured: false, new_arrival: true, sale: false, active: true, ...p });
   const [busy, setBusy] = useState(false); const [up, setUp] = useState(false);
@@ -55,7 +57,6 @@ function ProductForm({ p, cats, onClose, onSaved }: any) {
     const { error } = f.id ? await supabase.from('products').update(row).eq('id', f.id) : await supabase.from('products').insert(row);
     setBusy(false); if (error) return toast.error(error.message);
     toast.success(f.id ? 'Product updated successfully.' : 'Product added successfully.'); onSaved(); };
-  const L = ({ t, children }: any) => <label className="block text-xs tracking-widest">{t}{children}</label>;
   return <div className="fixed inset-0 z-50 bg-black/80 overflow-y-auto p-4"><form onSubmit={save} className="max-w-2xl mx-auto bg-ink border border-gold/40 p-5 space-y-3">
     <h2 className="text-xl text-gold">{f.id ? 'Edit' : 'Add'} Product</h2>
     <L t="NAME"><input className="input mt-1" required value={f.name} onChange={e => set('name', e.target.value)} /></L>
