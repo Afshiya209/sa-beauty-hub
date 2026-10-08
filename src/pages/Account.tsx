@@ -16,12 +16,15 @@ export function AuthForm() {
   const submit = async (e: FormEvent) => { e.preventDefault(); setBusy(true);
     if (mode === 'login') {
       const { error } = await supabase.auth.signInWithPassword({ email: f.email, password: f.password });
-      if (error) toast.error(error.message); else toast.success('Welcome back!');
+      if (error) toast.error(error.message.toLowerCase().includes('confirm') ? 'Please confirm your email first, or ask the store to enable your account.' : error.message); else toast.success('Welcome back!');
     } else {
       const { data, error } = await supabase.auth.signUp({ email: f.email, password: f.password, options: { data: { full_name: f.name, phone: f.phone } } });
       if (error) toast.error(error.message);
-      else if (!data.session) toast.success('Account created. Please check your email to confirm, then log in.');
-      else toast.success('Account created!');
+      else if (!data.session) {
+        const r = await supabase.auth.signInWithPassword({ email: f.email, password: f.password });
+        if (r.error) toast.error('Account created, but email confirmation is still switched on in Supabase. Turn it off (Authentication > Sign In / Providers > Email) and log in.', { duration: 8000 });
+        else toast.success('Account created!');
+      } else toast.success('Account created!');
     }
     setBusy(false); };
   return (<form onSubmit={submit} className="max-w-sm mx-auto py-14 px-4 space-y-4">
