@@ -1,12 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { Menu, Search, ShoppingBag, X, MessageCircle, User } from 'lucide-react';
 import { useCart } from '../lib/cart';
-import { waLink } from '../lib/supabase';
+import { waLink, WHATSAPP_NUMBER, setWhatsapp } from '../lib/supabase';
+import { getSettings } from '../lib/data';
 
 const links = [['/', 'Home'], ['/shop', 'Shop'], ['/about', 'About'], ['/contact', 'Contact']];
 export default function Layout() {
   const { count } = useCart(); const [open, setOpen] = useState(false); const nav = useNavigate();
+  const [num, setNum] = useState(WHATSAPP_NUMBER);
+  useEffect(() => { getSettings().then(st => { if (st?.whatsapp_number) { setWhatsapp(st.whatsapp_number); setNum(st.whatsapp_number); } }); }, []);
   const wa = waLink('Hello SA Beauty Care & Fashion Hub, I need help with my order.');
   return (<>
     <header className="sticky top-0 z-40 bg-ink/95 backdrop-blur border-b border-gold/30">
@@ -31,7 +34,7 @@ export default function Layout() {
       <img src="/logo.png" alt="" className="h-24 w-24 mx-auto" />
       <p className="font-serif text-gold mt-3">SA BEAUTY CARE AND FASHION HUB</p>
       <p className="text-muted text-xs tracking-[.3em] mt-1">BEAUTY • FASHION • CONFIDENCE</p>
-      <p className="mt-4 text-sm"><a className="hover:text-gold" href={wa}>WhatsApp: +91 6305967665</a></p>
+      <p className="mt-4 text-sm"><a className="hover:text-gold" href={wa}>WhatsApp: +{num.slice(0, 2)} {num.slice(2)}</a></p>
       <p className="text-muted text-xs mt-6">© {new Date().getFullYear()} SA Beauty Care and Fashion Hub. Cash on Delivery available across India.</p>
     </footer>
     <a href={wa} target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp" className="fixed bottom-5 right-5 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:scale-110 transition"><MessageCircle /></a>

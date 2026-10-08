@@ -10,6 +10,7 @@ if (!url || !key) {
 // Only the public anon key is used here. Never put the service_role key in frontend code.
 export const supabase = createClient(url, key);
 
-export const WHATSAPP_NUMBER = '916305967665';
+export let WHATSAPP_NUMBER = '916305967665';
+export const setWhatsapp = (n: string) => { WHATSAPP_NUMBER = n; };
 export const waLink = (message: string) =>
   `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
