@@ -13,7 +13,7 @@ export default function ProductPage() {
   if (error || !p) return <ErrorBox msg="Product not found." />;
   const off = p.original_price && p.original_price > p.price ? Math.round((1 - p.price / p.original_price) * 100) : 0;
   const out = p.stock < 1;
-  return (<div className="wrap py-10 grid md:grid-cols-2 gap-10">
+  return (<div className="wrap pt-8 pb-28 md:py-10 grid md:grid-cols-2 gap-10">
     <div>
       <div className="aspect-[4/5] bg-white/5 border border-gold/20 grid place-items-center overflow-hidden">
         {p.images[img] ? <img src={p.images[img]} alt={p.name} className="h-full w-full object-cover" /> : <img src="/logo.png" alt="" className="w-1/2 opacity-30" />}</div>
@@ -33,5 +33,8 @@ export default function ProductPage() {
         <button className="btn-ghost" disabled={out} onClick={() => { if (add(p, qty)) nav('/checkout'); }}>Buy Now</button>
       </div>
       <a className="btn-ghost w-full mt-3" target="_blank" rel="noreferrer" href={waLink(`Hello, I am interested in ${p.name}. Please provide more details.`)}>Ask on WhatsApp</a>
-    </div></div>);
+    </div>
+    {!out && <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-ink/95 backdrop-blur border-t border-gold/30 p-3 flex items-center gap-3">
+      <div><p className="text-[10px] text-muted tracking-widest">TOTAL</p><p className="text-gold font-semibold">{money(p.price * qty)}</p></div>
+      <button className="btn flex-1" onClick={() => add(p, qty)}>Add to Cart</button></div>}</div>);
 }
