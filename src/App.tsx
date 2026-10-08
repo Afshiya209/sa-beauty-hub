@@ -5,10 +5,11 @@ import Shop from './pages/Shop';
 import ProductPage from './pages/Product';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
+import Admin from './admin/Admin';
 import { About, Contact, OrderSuccess, Policy } from './pages/Static';
 
 export default function App() {
-  return (<Routes><Route element={<Layout />}>
+  return (<Routes><Route path="/admin/*" element={<Admin />} /><Route element={<Layout />}>
     <Route path="/" element={<Home />} /><Route path="/shop" element={<Shop />} />
     <Route path="/product/:slug" element={<ProductPage />} /><Route path="/cart" element={<Cart />} />
     <Route path="/checkout" element={<Checkout />} /><Route path="/order-success" element={<OrderSuccess />} />
