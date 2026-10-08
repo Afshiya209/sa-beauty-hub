@@ -20,3 +20,4 @@ There is deliberately no public admin signup.
 
 ## What's included so far
 Database schema with RLS, atomic stock-safe `place_order()` (duplicate-click safe via `request_key`), image storage policies, demo data, Supabase client, types, logo at `public/logo.png`.
+ 
