@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { Menu, Search, ShoppingBag, X, MessageCircle } from 'lucide-react';
+import { Menu, Search, ShoppingBag, X, MessageCircle, User } from 'lucide-react';
 import { useCart } from '../lib/cart';
 import { waLink } from '../lib/supabase';
 
@@ -17,6 +17,7 @@ export default function Layout() {
         </nav>
         <div className="flex items-center gap-4">
           <button aria-label="Search" onClick={() => nav('/shop')}><Search size={20} /></button>
+          <Link to="/account" aria-label="My account"><User size={20} /></Link>
           <Link to="/cart" aria-label="Cart" className="relative"><ShoppingBag size={20} />
             {count > 0 && <span className="absolute -top-2 -right-2 bg-gold text-ink text-[10px] font-bold h-4 min-w-4 px-1 grid place-items-center rounded-full">{count}</span>}</Link>
           <button className="md:hidden" aria-label="Menu" onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</button>
